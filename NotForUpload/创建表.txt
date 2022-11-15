@@ -1,0 +1,282 @@
+(先建库，再建表)(逗号，分号，双引号，括号都要是英文的)
+
+create database 这里写库的名字;
+use 这里写你要进入的库的名字;
+create table if not exists students(
+s_no char(6) not null comment'学号',
+s_name char(6) not null comment'姓名',
+sex enum('男','女') default'男' comment'性别',
+birthday date not null comment'出生日期',
+d_no char(4) not null comment'院系编号',
+address varchar(20) not null comment'家庭地址',
+phone varchar(12) not null comment'联系电话',
+photo blob comment'照片',
+primary key (s_no));
+
+
+create table if not exists sourse(
+c_no char(4) not null,
+c_name char(10) not null,
+hours tinyint (3) not null,
+credit tinyint(3) not null,
+type enum('必修课','选修课') default '必修课',
+primary key (c_no));
+
+create table if not exists score(
+s_no char(6) not null,
+c_no char(4) not null,
+report float(3,1) default 0,
+primary key (s_no,c_no));
+
+
+create table if not exists departments(
+d_no char(6) not null comment'院系编号',
+d_name char(4) not null comment'院系名称',
+primary key (d_no));
+
+
+create table if not exists teachers(
+t_no char(8) not null comment'教师编号',
+t_name char(4) not null comment'教师姓名',
+d_no char(6) not null comment'院系编号',
+primary key(t_no));
+
+create table if not exists teach(
+t_no char(8) not null comment'教师编号',
+c_no char(4) not null comment'课程编号',
+key t_no (t_no),
+key c_no (c_no));
+
+create table if not exists student2(
+s_no char(6) not null comment'学号',
+s_name char(6) not null comment'姓名',
+sex enum('男','女') default'男' comment'性别',
+birthday date not null comment'出生日期',
+d_no char(4) not null comment'院系编号',
+address varchar(20) not null comment'家庭地址',
+phone varchar(12) not null comment'联系电话',
+photo blob comment'照片',
+primary key (s_no),
+unique index name_index(s_name),
+index ad_index(address(6))
+);
+
+
+
+///show create table students;查看创建表数据语句
+
+///create table course_bak like course; (复制表)
+
+///alter table course_bak add hours tinyint NOT NULL 
+COMMENT '学时' after c_name;   
+向course_bak表中添加字段hours，位置在c_name字段后面。
+
+///alter table course_bak drop hours； 删除hours字段 
+
+///show databases;(查看库)
+
+///show tables;(查看表)
+
+///select * from 这里写表名字;(查询表的数据)
+
+///show full columns from 这里写表名字;(查看表的结构)
+
+///delete from 这里写表名字;(删除表的数据)
+
+///drop table 这里写表名字;(删除表)
+
+///drop database 这里写库的名字;(删除数据库)
+
+///alter table students alter sex SET DEFAULT '女';  修改性别字段的默认值为'女'。 
+
+///alter table sourse modify credit float(3,1) NOT NULL COMMENT '学分';   修改学分字段的数据类型为浮点型。 
+
+///insert into students values('0116','周骏宇','男','2002-12-21','d003','湖南省长沙市星沙东四路','18773796711',null);插入一条数据
+
+///insert into students values('0117','李四','男','2002-12-21','d003','湖南省长沙市星沙东四路','18773796711',null),('0118','张三','男','2002-12-21','d003','湖南省长沙市星沙东四路','18773796711',null);    插入两条数据insert into
+
+///replace into students values('0116','周骏宇','女','2002-12-21','d003','湖南省长沙市星沙东四路','18773796711',null);   替换数据replace into
+
+///update students set sex='女' where s_name='李四';  修改表数据，可以修改一个表的数据，也可以修改多个表的数据   update...set...
+
+///ALTER TABLE 旧表名 RENAME 新表名;  修改表名
+把数据表tb_emp改名为jd_emp
+alter table tb_emp rename jd_emp;
+
+///ALTER TABLE 表名 CHANGE 旧字段名 新字段名 新数据类型;  修改字段名
+把数据表tb_emp的字段Id改名为prod_id，数据类型不变
+alter table tb_emp change Id prod_id int(11);
+
+///ALTER TABLE 表名 MODIFY 字段名 数据类型; 修改字段数据类型
+把数据表tb_emp字段Name的数据类型改为varchar(30)
+alter table tb_emp modify Name varchar(30);
+
+///ALTER TABLE 表名 ADD 新字段名 数据类型 [约束条件] [FIRST|AFTER] 已存在字段名;  添加字段
+以下是在 MySQL 中常用的约束。
+在数据表tb_emp的Name字段后添加字段Country，数据格式为varchar(20)
+alter table tb_emp add Country varchar(20) after Name;
+
+NOT NULL 约束：确保某列不能有 NULL 值。
+
+DEFAULT 约束：当某列没有指定值时，为该列提供默认值。
+
+UNIQUE 约束：确保某列中的所有值是不同的。
+
+PRIMARY Key 约束：唯一标识数据库表中的各行/记录。
+
+CHECK 约束：CHECK 约束确保某列中的所有值满足一定条件。
+
+///ALTER TABLE 表名 DROP 字段名; 删除字段 
+删除数据表tb_emp中的字段Salary
+alter table tb_emp drop Salary;
+
+///ALTER TABLE 表名 MODIFY 字段1 数据类型 FIRST; 前面
+将数据表tb_emp的Name字段移至第一列，数据格式不变
+alter table tb_emp modify Name varchar(25) first;
+
+///ALTER TABLE 表名 MODIFY 字段1 数据类型 AFTER 字段2; 后面
+将DeptId字段移至Salary字段的后边，数据格式不变
+alter table tb_emp modify DeptId int(11) after Salary;
+
+///ALTER TABLE 表名 DROP FOREIGN KEY 外键约束名;删除表的外键约束
+删除数据表tb_emp的外键约束emp_dept
+alter table tb_emp drop foreign key emp_dept;
+
+///insert into sourse values('C004','数据可视化','56','3.5','必修课');插入记录到sourse
+
+使用update……set……语句修改MySQL数据库的学分值为4分。 
+///update sourse set credit=4 where c_name='MySQL数据库';
+
+使用update……set……语句修改sourse表中的学分值大于3.5分的课程的学时为70。 
+///update sourse set hours=70 where credit>3.5;
+
+删除sourse_bak表中学时低于60的课程信息（记录） 
+///delete from sourse_bak where hours<60;
+
+///insert into student2 select * from students;复制结构一样的表
+///create table sourse_bak as select * from sourse; 建立课程备份表 
+
+///alter table sourse_bak add primary key(c_no);添加主键
+
+///show index from sourse_bak;查看索引
+
+///alter table student2 drop index name_index; 删除（唯一性）索引和普通索引都使用drop index index_name 
+
+///alter table student2 drop primary key;删除主键
+
+///alter table student2 add primary key(s_name);添加主键
+
+///alter table student3 add unique index name_index(s_name),add index ad_index(address(6)); 通过alter语句添加索引 
+
+///ASC升序    DESC降序
+
+///外键
+create table if not exists score(
+s_no char(6) not null,
+c_no char(4) not null,
+report float(3,1) default 0,
+primary key (s_no,c_no),
+foreign key(s_no)
+references students(s_no)
+on update restrict
+on delete restrict,
+foreign key(c_no)
+references sourse(c_no)
+on update restrict
+on delete restrict
+);
+
+///alter table score drop foreign key score_ibfk_2; 删除外键 
+
+///alter table score
+    add foreign key(c_no)
+    references sourse(c_no)
+    on delete cascade
+    on update cascade; 
+通过alter语句添加外键 
+
+///alter table score add foreign key(s_no) references students(s_no) on delete cascade on update cascade; 为已有表添加外键约束 
+
+///constraint(约束名字)
+constraint score_xh foreign key(s_no)
+references students(s_no)
+on delete restrict
+on update restrict 
+
+
+/*
+insert into students values('202140210003','刘金阳','男','2001-05-08','jg4','湖南省湖南镇湖南村4号','17841443565','');
+
+insert into course values('006','数据线','80','45','选修');
+
+
+
+*/
+
+
+
+alter table students alter sex SET DEFAULT '女';  修改性别字段的默认值为'女'。
+ 
+alter table course modify credit float(3,1) NOT NULL COMMENT '学分';   修改学分字段的数据类型为浮点型。 
+
+alter table course_bak drop hours； 删除hours字段 
+
+alter table course_bak add hours tinyint NOT NULL COMMENT '学时' after c_name;   向course_bak表中添加字段hours，位置在c_name字段后面。
+ 
+create table course_bak as select * from course; 建立课程备份表
+
+show create table students\g; 查看创建students表的语句。 
+
+show index from xuesheng;查看xuesheng的索引
+
+alter table student2 drop index name_index; 删除（唯一性）索引和普通索引都使用drop index index_name 
+
+show create table score\g；查看创建表的语句。 
+
+alter table score drop foreign key score_ibfk_2; 删除外键 
+
+alter table 备份表_bak rename to 表;
+将备份表转换为主表。
+
+alter table score add foreign key(s_no) references students(s_no) on delete cascade on update cascade; 为已有表添加外键约束
+
+
+select c_no as '课程编号' from score;    //显示score表中所有学生c_no的数据并以‘课程编号’表表示出来
+
+select distinct c_no as '课程编号' from score;  //所有学生不重复显示的课
+
+select * from students   //显示students表中所有数据
+select sex from students   //显示students表中sex的数据
+
+select count(*) as '女生人数' from students where sex='女';  //计算students表中女生数量
+并用‘女生人数’表表示出来，反之男生人数
+
+
+select name as '姓名',d_name as '院系名称',address as '地址' from students,departments where departments.d_no=students.d_no;
+// 显示students表中的name，address， 和departments表中的d_name数据，， 当departments.d_no的数据吻合students.d_no数据的时候。
+
+
+select * from students where name like '邓%';  选择students表中姓为邓的同学 （%代表很多字符）
+
+select * from students where name like '_可%';  选择students表中字为可的同学 （_代表一个字符）
+
+select * from students where birthday between '2003-01-01' and '2003-01-31' and address like '%湖南村%';
+
+select d_no as 系部编号, sex as 性别,count(*) as 人数 from students group by d_no,sex;  从students表里计算d_no数据
+命名为系部编号， 计算sex数据命名为性别，计算所有的列*并命名为人数打印出来，最后根据d_no, sex 分类分组
+
+select  c_no as 课程编号, avg(report) as 平均分, count(*) as 人数 from score group by c_no;    从score表里计算c_no数据
+命名为课程编号，计算report数据的平均分命名为平均分，计算所有的列*并命名为人数打印出来，最后根据c_no 分类分组
+
+select * from score order by report desc;    按照report数据的降序显示score表
+
+select * from score order by c_no,report desc;   按照report 和 c_no数据的降序显示score表
+
+select s_no as 学号,avg(report) as 平均分 from score group by s_no order by avg(report);
+
+select s_no from score group by s_no having count(s_no)>2;   从score表中选择s_no 的数据按s_no分类并打印出
+选修课大于两门的同学
+
+select * from score limit 2,5;   在score表中从2+1行开始显示数据， 5 表示显示的行数
+
+ select c_no as 课程,max(report) as 最高分 from score group by c_no;   求课程的最高分并通过c_no 排序
